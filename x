@@ -20,8 +20,14 @@ BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 SH="./src/default/sh.sh"
 RC="./src/default/rc.sh"
 CONF="$BIN_DIR/src/conf.sh"
-declare -a SRC=("./src/default" "./src/env")
 declare -a IMPORT=("./src/import")
+declare -a FUNC=("./src/func")
+declare -a ENV=("bash" "node" "perl" "ruby" "python")
+declare -a SCRIPT=("./src/script")
+MAKES=("sample ./default/Makefile")
+#for MAKE in "${MAKES[@]}"; do
+#  "${MAKE}"
+#done
 ARGS=$@
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then

@@ -1,3 +1,2 @@
 #!/bin/bash
-echo "rc mode @:$@"
-
+[ "$DEBUG" = "TRUE" ] && log "rc mode @:$@"
