@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "rc mode $@"
+echo "rc mode @:$@"
 

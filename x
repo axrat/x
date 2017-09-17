@@ -3,27 +3,31 @@
 
 ##flg
 [[ "$1" =~ ^-d$ ]] && DEBUG="TRUE" || unset DEBUG
-[ "$DEBUG" = "TRUE" ] && echo "#DEBUG_MODE" \
+[ "$DEBUG" = "TRUE" ] && printf "DEBUG_MODE\n" \
 #	|| echo "#NOT_DEBUG_MODE"
-if echo "$-" | grep -q "i"; then
+if $(echo "$-" | grep -q "i"); then
   SOURCE="TRUE"
+else
+  unset SOURCE
 fi
 
 ##var
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
-NAME=${BASH_SOURCE##*/}
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
-BIN_PATH=$(readlink -f "$INSTALL_DIR/$NAME")
+BIN_NAME=${BASH_SOURCE##*/}
+BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 SH="./src/default/sh.sh"
 RC="./src/default/rc.sh"
 CONF="./src/conf.sh"
+declare -a SRC=("./src/default" "./src/env")
 ARGS=$@
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
     ARGS=${ARGS#"-d"}
   fi 
 fi
+[ "$ARGS" = "" ] && ARGS="null"
 
 ##func
 hr(){
@@ -32,30 +36,35 @@ hr(){
   done
 }
 hbr(){ hr && printf "\n"; }
-
+ownlog(){ echo -e "\e[33;40;5m# \e[m\e[37;40;5m$@\e[m"; }
+log(){ echo -e "\e[33;40;1m$ \e[m\e[37;40;5m$@\e[m"; }
 
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
-  echo "#LINES:$LINES,COLUMNS:$COLUMNS"
-  echo "#\$#:$#,@:$@"
-  printf "#ARGS(\$@-d):" && [ "$ARGS" = "" ] && echo "null" || echo $ARGS
-  echo "#INSTALL:$INSTALL_DIR ==> $NAME"
-  echo "#BIN_PATH:$BIN_PATH"
   hbr
+  ownlog "LINES:$LINES,COLUMNS:$COLUMNS"
+  ownlog "\$#:$#,@:$@"
+  ownlog "ARGS(\$@-d):$ARGS"
+  ownlog "INSTALL:$INSTALL_DIR/$BIN_NAME"
+  ownlog "BIN_PATH:$BIN_DIR/$BIN_NAME"
 fi
 
-##conf
+##override
 [ -s "$CONF" ] && \. "$CONF"
+
+#[ "$DEBUG" = "TRUE" ] && hbr
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
-  source $RC $ARGS
+  source ${RC/.\//$BIN_DIR/} $ARGS
 else
-  source $SH $ARGS
-#  declare -a SRC=("default" "env")
-#  for ((i = 0; i < ${#SRC[@]}; i++)) {
-#    echo "${SRC[i]}"
-#  }
+  for ((i = 0; i < ${#SRC[@]}; i++)) {
+    SRC_PATH=${SRC[i]/.\//$BIN_DIR/}
+    if [ "$DEBUG" = "TRUE" ]; then
+      log "No.$((i+1)):$SRC_PATH"
+	fi
+  }
+  source ${SH/.\//$BIN_DIR/} $ARGS
 fi
 
 ##exit

@@ -1,3 +1,2 @@
 #!/bin/bash
-echo "sh mode $@"
-
+[ "$DEBUG" = "TRUE" ] && log "sh mode @:$@"
