@@ -8,8 +8,10 @@ x is cmd bridge
 `source x`  
 `source x -d`  
 
+## author
+onoie
   
-# config.sh
+## config.sh
 #### import
 autoload  
 ex) `declare -a IMPORT=("./src/import")`  
