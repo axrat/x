@@ -1,0 +1,5 @@
+#!bin/bash
+echo "override configuraion script example"
+SH="./src/default/sh.sh"
+RC="./src/default/rc.sh"
+

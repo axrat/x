@@ -12,8 +12,12 @@ fi
 ##var
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
-SH="./src/sh.sh"
-RC="./src/rc.sh"
+NAME=${BASH_SOURCE##*/}
+INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
+BIN_PATH=$(readlink -f "$INSTALL_DIR/$NAME")
+SH="./src/default/sh.sh"
+RC="./src/default/rc.sh"
+CONF="./src/conf.sh"
 ARGS=$@
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
@@ -29,22 +33,19 @@ hr(){
 }
 hbr(){ hr && printf "\n"; }
 
-##init
-#BASENAME=`basename $0`
-#INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
-#BIN_PATH=$(readlink -f "$INSTALL_DIR/$BASENAME")
 
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
   echo "#LINES:$LINES,COLUMNS:$COLUMNS"
   echo "#\$#:$#,@:$@"
   printf "#ARGS(\$@-d):" && [ "$ARGS" = "" ] && echo "null" || echo $ARGS
-#  if [ ! "$SOURCE" = "TRUE" ]; then
-#  echo "#INSTALL:$INSTALL_DIR/$BASENAME"
-#  echo "#BIN_PATH:$BIN_PATH"
-#  fi
+  echo "#INSTALL:$INSTALL_DIR ==> $NAME"
+  echo "#BIN_PATH:$BIN_PATH"
   hbr
 fi
+
+##conf
+[ -s "$CONF" ] && \. "$CONF"
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
