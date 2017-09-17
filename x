@@ -51,6 +51,10 @@ if [ "$SOURCE" = "TRUE" ]; then
   source $RC $ARGS
 else
   source $SH $ARGS
+#  declare -a SRC=("default" "env")
+#  for ((i = 0; i < ${#SRC[@]}; i++)) {
+#    echo "${SRC[i]}"
+#  }
 fi
 
 ##exit
