@@ -8,12 +8,6 @@ x is cmd bridge
 `source x`  
 `source x -d`  
   
-## author
-onoie
-  
-## variable
-LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
-  
 ## config.sh
 ##### import
 autoload  
@@ -31,4 +25,9 @@ ex) `declare -a ENV=("bash" "node")`
 alias makefiles  
 ex) `declare -a MAKES=("sample ./default/Makefile")`  
 ~~`x make sample readme` => `$MAKES[sample]:./src/default/Makefile.make readme`~~  
-
+## variable
+DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
+  
+## author
+onoie
+  
