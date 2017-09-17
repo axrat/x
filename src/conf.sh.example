@@ -1,6 +1,7 @@
 #!bin/bash
-echo "override configuraion script example"
+#echo "override configuraion script example"
 # "./" -> BIN_DIR
+declare -a IMPORT=("./src/import")
 declare -a SRC=("./src/default" "./src/env")
 SH="./src/default/sh.sh"
 RC="./src/default/rc.sh"

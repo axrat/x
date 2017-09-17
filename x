@@ -19,8 +19,9 @@ BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 SH="./src/default/sh.sh"
 RC="./src/default/rc.sh"
-CONF="./src/conf.sh"
+CONF="$BIN_DIR/src/conf.sh"
 declare -a SRC=("./src/default" "./src/env")
+declare -a IMPORT=("./src/import")
 ARGS=$@
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
@@ -52,23 +53,31 @@ fi
 ##override
 [ -s "$CONF" ] && \. "$CONF"
 
-#[ "$DEBUG" = "TRUE" ] && hbr
+##import
+for ((no = 0; no < ${#IMPORT[@]}; no++)) {
+  IMPORT_PATH=${IMPORT[no]/.\//$BIN_DIR/}
+  if [ "$DEBUG" = "TRUE" ]; then
+    log "IMPORT.$((no+1)):$IMPORT_PATH"
+  fi
+}
+
+[ "$DEBUG" = "TRUE" ] && hbr
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
   source ${RC/.\//$BIN_DIR/} $ARGS
 else
-  for ((i = 0; i < ${#SRC[@]}; i++)) {
-    SRC_PATH=${SRC[i]/.\//$BIN_DIR/}
+  for ((no = 0; no < ${#SRC[@]}; no++)) {
+    SRC_PATH=${SRC[no]/.\//$BIN_DIR/}
     if [ "$DEBUG" = "TRUE" ]; then
-      log "No.$((i+1)):$SRC_PATH"
+      log "SRC.$((no+1)):$SRC_PATH"
 	fi
   }
   source ${SH/.\//$BIN_DIR/} $ARGS
 fi
 
 ##exit
-[ "$DEBUG" = "TRUE" ] && hbr
+[ "$DEBUG" = "TRUE" ] && hbr && echo "COMPLETE"
 if [ "$SOURCE" = "TRUE" ]; then
   return 0;
 else
