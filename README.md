@@ -9,7 +9,7 @@ x is cmd bridge
 `source x -d`  
 
   
-#" config.sh
+# config.sh
 #### import
 autoload  
 ex) `declare -a IMPORT=("./src/import")`  
