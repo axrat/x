@@ -7,9 +7,12 @@ x is cmd bridge
 `sh ./x -d`  
 `source x`  
 `source x -d`  
-
+  
 ## author
 onoie
+  
+## variable
+LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
   
 ## config.sh
 ##### import

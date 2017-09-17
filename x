@@ -24,9 +24,6 @@ declare -a IMPORT=("./src/import")
 declare -a ENV=("bash" "node")
 declare -a SCRIPT=("./src/script")
 declare -a MAKES=("sample ./default/Makefile")
-#for MAKE in "${MAKES[@]}"; do
-#  "${MAKE}"
-#done
 ARGS=$@
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
@@ -37,7 +34,7 @@ fi
 
 ##func
 hr(){
-  for i in `seq 1 $(tput cols)`; do 
+  for no in `seq 1 $(tput cols)`; do 
     printf ${1:-"-"}
   done
 }
@@ -55,6 +52,8 @@ if [ "$DEBUG" = "TRUE" ]; then
   ownlog "BIN_PATH:$BIN_DIR/$BIN_NAME"
 fi
 
+[ "$DEBUG" = "TRUE" ] && hbr
+
 ##override
 [ -s "$CONF" ] && \. "$CONF"
 
@@ -65,8 +64,28 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
     log "IMPORT.$((no+1)):$IMPORT_PATH"
   fi
 }
+##script
+for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
+  SCRIPT_PATH=${SCRIPT[no]/.\//$BIN_DIR/}
+  if [ "$DEBUG" = "TRUE" ]; then
+    log "SCRIPT.$((no+1)):$SCRIPT_PATH"
+  fi
+}
+##env
+for ((no = 0; no < ${#ENV[@]}; no++)) {
+  ENV_PATH=${ENV[no]/.\//$BIN_DIR/}
+  if [ "$DEBUG" = "TRUE" ]; then
+    log "ENV.$((no+1)):$ENV_PATH"
+  fi
+}
+##makes
+for ((no = 0; no < ${#MAKES[@]}; no++)) {
+  MAKE_PATH=${MAKES[no]/.\//$BIN_DIR/}
+  if [ "$DEBUG" = "TRUE" ]; then
+    log "MAKE.$((no+1)):$MAKE_PATH"
+  fi
+}
 
-[ "$DEBUG" = "TRUE" ] && hbr
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
