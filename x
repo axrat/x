@@ -1,9 +1,9 @@
 #!/bin/bash
 
-
 ##flg
+timestamp(){ printf " : %.23s\n" "$(date +'%Y-%m-%d %H:%M:%S.%N')"; }
 [[ "$1" =~ ^-d$ ]] && DEBUG="TRUE" || unset DEBUG
-[ "$DEBUG" = "TRUE" ] && printf "DEBUG_MODE\n" \
+[ "$DEBUG" = "TRUE" ] && printf "DEBUG_MODE" && timestamp \
 #	|| echo "#NOT_DEBUG_MODE"
 if $(echo "$-" | grep -q "i"); then
   SOURCE="TRUE"
@@ -83,7 +83,7 @@ else
 fi
 
 ##exit
-[ "$DEBUG" = "TRUE" ] && hbr && echo "COMPLETE"
+[ "$DEBUG" = "TRUE" ] && hbr && printf "_COMPLETE_" && timestamp
 if [ "$SOURCE" = "TRUE" ]; then
   return 0;
 else
