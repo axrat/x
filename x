@@ -12,25 +12,24 @@ else
 fi
 
 ##var
-ESRT="\e[37;40;5m"
-EEND="\e[m"
-SHARP="\e[33;40;5m#\e[m"
-YEN="\e[33;40;1m$\e[m"
+declare -r ESRT="\e[37;40;5m"
+declare -r EEND="\e[m"
+declare -r SHARP="\e[33;40;5m#\e[m"
+declare -r YEN="\e[33;40;1m$\e[m"
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
 BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 BIN_PATH="$BIN_DIR/$BIN_NAME"
+SRC="$BIN_DIR/src"
 export X=$BIN_PATH
-
-##src
-SRC="$BIN_DIR/src/"
-SH="$SRC/sh.sh"
-RC="$SRC/rc.sh"
 
 ##config
 CONF="$SRC/conf.sh";
+SH="$SRC/sh.sh"
+RC="$SRC/rc.sh"
+EX="$SRC/ex.sh"
 declare -a IMPORT=("./default/import/*");
 declare -a SCRIPT=("./default/script/example.sh");
 declare -a ENV=("bash" "node");
@@ -124,7 +123,7 @@ for ((no = 0; no < ${#ENV[@]}; no++)) {
 for ((no = 0; no < ${#MAKES[@]}; no++)) {
   MAKE_PATH=${MAKES[no]/.\//$BIN_DIR/}
   if [ "$DEBUG" = "TRUE" ]; then
-    log "MAKE.$((no+1)):$MAKE_PATH"
+    log "MAKE.$((no+1)):[$MAKE_PATH]"
   fi
 }
 XALIAS+=("make")
@@ -142,6 +141,9 @@ if [ "$SOURCE" = "TRUE" ]; then
 else
   source ${SH/.\//$BIN_DIR/} $ARGS
 fi
+
+##ex
+load $EX
 
 ##exit
 [ "$DEBUG" = "TRUE" ] && hbr && printf "_COMPLETE_" && timestamp
