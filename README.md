@@ -6,12 +6,10 @@ x is cmd manager
 `x`  
 `x -d`  
 `./x install.sh`  
-`./x uninstall.sh`  
 `sh ./x`  
-`sh ./x -d`  
 `source x`  
-`source x -d`  
 `vim $X`  
+`cd $XD`  
   
 ## config.sh
 ##### import
@@ -31,8 +29,8 @@ makefiles alias
 ex) `declare -a MAKES=("sample ./default/Makefile")`  
 ~~`x make sample readme` => `$MAKES[sample]:./src/default/Makefile.make readme`~~  
 ## variable
-X,DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
-  
+export X,XD   
+DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS  
 ### function
 timestamp,hr,hbr,ownlog,log,notfound,exist,load
   
