@@ -8,8 +8,5 @@ if [ ! -e $CONF_PATH ]; then
   ln -s $(pwd)/conf.sh $CONF_PATH
 fi
 
-#declare -a IMPORT=("./default/import/*");
-#declare -a SCRIPT=("./default/script/example.sh");
-#declare -a ENV=("bash" "node");
-#declare -a MAKES=("sample ./default/Makefile");
+#IMPORT=("./default/import/*");
 

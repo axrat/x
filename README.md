@@ -1,7 +1,7 @@
 # x
 x is cmd manager  
 ##### download
-`sudo wget --no-check-certificate https://github.com/onoie/x/archive/master.zip -O /x-master.zip`  
+`sudo wget --no-check-certificate https://github.com/onoie/x/archive/master.zip -O x-master.zip`  
 ##### usage
 `x`  
 `x -d`  

@@ -28,7 +28,7 @@ export X=$BIN_PATH
 
 
 ##config
-CONF="$SRC/conf.sh";
+CONF="./default/conf.sh";
 SH="$SRC/sh.sh"
 RC="$SRC/rc.sh"
 EX="$SRC/ex.sh"
@@ -94,10 +94,17 @@ if [ "$DEBUG" = "TRUE" ]; then
   ownlog "SRC:$SRC"
 fi
 
+##override
+#[ -s "$CONF" ] && \. "$CONF"
+load ${CONF/.\//$BIN_DIR/}
+
 [ "$DEBUG" = "TRUE" ] && hbr
 
-##override
-[ -s "$CONF" ] && \. "$CONF"
+if [ "$DEBUG" = "TRUE" ]; then
+  log "RC:$RC"
+  log "SH:$SH"
+  check $EX
+fi
 
 ##import
 for ((no = 0; no < ${#IMPORT[@]}; no++)) {
@@ -130,22 +137,21 @@ for ((no = 0; no < ${#MAKES[@]}; no++)) {
 }
 XALIAS+=("make")
 
-[ "$DEBUG" = "TRUE" ] && hbr
-
 ##alias
 if [ "$DEBUG" = "TRUE" ]; then
-  echo -e "$YEN$ESRT XALIAS:[${XALIAS[@]}]${EEND}"
+  echo -e "$YEN$ESRT ==>XALIAS:[${XALIAS[@]}]${EEND}"
 fi
+
+[ "$DEBUG" = "TRUE" ] && hbr
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
   source ${RC/.\//$BIN_DIR/} $ARGS
 else
   source ${SH/.\//$BIN_DIR/} $ARGS
+  ##ex
+  load $EX
 fi
-
-##ex
-load $EX
 
 ##exit
 [ "$DEBUG" = "TRUE" ] && hbr && printf "_COMPLETE_" && timestamp
