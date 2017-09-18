@@ -19,13 +19,15 @@ BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 BIN_PATH="$BIN_DIR/$BIN_NAME"
 export X=$BIN_PATH
-##init
+
+##src
 SRC="$BIN_DIR/src/"
 SH="$SRC/sh.sh"
 RC="$SRC/rc.sh"
+
 ##config
 CONF="$SRC/conf.sh"
-declare -a IMPORT=("./import")
+declare -a IMPORT=("./import/*")
 declare -a SCRIPT=("./script/example.sh")
 declare -a ENV=("bash" "node")
 declare -a MAKES=("sample ./default/Makefile")
@@ -46,9 +48,34 @@ hr(){
 hbr(){ hr && printf "\n"; }
 ownlog(){ echo -e "\e[33;40;5m# \e[m\e[37;40;5m$@\e[m"; }
 log(){ echo -e "\e[33;40;1m$ \e[m\e[37;40;5m$@\e[m"; }
-notfound(){ log "NOT_FOUND:$@"; }
+notfound(){ log "==>NOT_FOUND:$@"; }
 exist(){ [ -s "$1" ] && return 0 || return 1; }
-load(){ exist "$1" && \. "$1" || notfound $1; }
+check(){
+  if exist "$1"; then
+    [ "$DEBUG" = "TRUE" ] && log "==>CHECK:$1"
+  else
+    notfound $1;
+  fi
+}
+load(){ 
+  if exist "$1"; then
+    [ "$DEBUG" = "TRUE" ] && log "==>LOAD:$1"
+    \. "$1"
+  else
+    notfound $1;
+  fi
+}
+dirload(){
+FARY=();
+for filepath in $1; do
+  if [ -f $filepath ] ; then
+    FARY+=("$filepath")
+  fi
+done
+for item in ${FARY[@]}; do
+  load $item
+done
+}
 
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
@@ -72,6 +99,7 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
   if [ "$DEBUG" = "TRUE" ]; then
     log "IMPORT.$((no+1)):$IMPORT_PATH"
   fi
+  dirload $IMPORT_PATH
 }
 ##script
 for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
@@ -79,7 +107,7 @@ for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
   if [ "$DEBUG" = "TRUE" ]; then
     log "SCRIPT.$((no+1)):$SCRIPT_PATH"
   fi
-  load $SCRIPT_PATH
+  check $SCRIPT_PATH
 }
 ##env
 for ((no = 0; no < ${#ENV[@]}; no++)) {
@@ -102,12 +130,6 @@ for ((no = 0; no < ${#MAKES[@]}; no++)) {
 if [ "$SOURCE" = "TRUE" ]; then
   source ${RC/.\//$BIN_DIR/} $ARGS
 else
-#  for ((no = 0; no < ${#SRC[@]}; no++)) {
-#    SRC_PATH=${SRC[no]/.\//$BIN_DIR/}
-#    if [ "$DEBUG" = "TRUE" ]; then
-#      log "SRC.$((no+1)):$SRC_PATH"
-#	fi
-#  }
   source ${SH/.\//$BIN_DIR/} $ARGS
 fi
 

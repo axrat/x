@@ -27,7 +27,7 @@ alias makefiles
 ex) `declare -a MAKES=("sample ./default/Makefile")`  
 ~~`x make sample readme` => `$MAKES[sample]:./src/default/Makefile.make readme`~~  
 ## variable
-DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
+X,DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS
   
 ### function
 timestamp,hr,hbr,ownlog,log,notfound,exist,load
