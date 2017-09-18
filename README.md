@@ -1,5 +1,7 @@
 # x
-x is cmd bridge
+x is cmd bridge  
+##### download
+`sudo wget --no-check-certificate https://github.com/onoie/x/archive/master.zip -O /master.zip`  
   
 `x`  
 `x -d`  
@@ -12,7 +14,7 @@ x is cmd bridge
 ## config.sh
 ##### import
 autoload  
-ex) `declare -a IMPORT=("./src/import")`  
+ex) `declare -a IMPORT=("./src/import/*")`  
 ##### script
 fast script  
 ex) `declare -a SCRIPT=("./src/script")`  
