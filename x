@@ -12,6 +12,10 @@ else
 fi
 
 ##var
+ESRT="\e[37;40;5m"
+EEND="\e[m"
+SHARP="\e[33;40;5m#\e[m"
+YEN="\e[33;40;1m$\e[m"
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
@@ -26,12 +30,13 @@ SH="$SRC/sh.sh"
 RC="$SRC/rc.sh"
 
 ##config
-CONF="$SRC/conf.sh"
-declare -a IMPORT=("./import/*")
-declare -a SCRIPT=("./script/example.sh")
-declare -a ENV=("bash" "node")
-declare -a MAKES=("sample ./default/Makefile")
-ARGS=$@
+CONF="$SRC/conf.sh";
+declare -a IMPORT=("./default/import/*");
+declare -a SCRIPT=("./default/script/example.sh");
+declare -a ENV=("bash" "node");
+declare -a MAKES=("sample ./default/Makefile");
+declare -a XALIAS=();
+ARGS=$@;
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
     ARGS=${ARGS#"-d"}
@@ -46,8 +51,8 @@ hr(){
   done
 }
 hbr(){ hr && printf "\n"; }
-ownlog(){ echo -e "\e[33;40;5m# \e[m\e[37;40;5m$@\e[m"; }
-log(){ echo -e "\e[33;40;1m$ \e[m\e[37;40;5m$@\e[m"; }
+ownlog(){ echo -e "$SHARP$ESRT $@$EEND"; }
+log(){ echo -e "$YEN$ESRT $@$EEND"; }
 notfound(){ log "==>NOT_FOUND:$@"; }
 exist(){ [ -s "$1" ] && return 0 || return 1; }
 check(){
@@ -101,21 +106,20 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
   fi
   dirload $IMPORT_PATH
 }
+
 ##script
 for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
   SCRIPT_PATH=${SCRIPT[no]/.\//$BIN_DIR/}
-  if [ "$DEBUG" = "TRUE" ]; then
-    log "SCRIPT.$((no+1)):$SCRIPT_PATH"
-  fi
   check $SCRIPT_PATH
+  XALIAS+=(${SCRIPT_PATH##*/})
 }
+
 ##env
+[ "$DEBUG" = "TRUE" ] && echo -e "$YEN$ESRT ENV:[${ENV[@]}]${EEND}"
 for ((no = 0; no < ${#ENV[@]}; no++)) {
-  ENV_PATH=${ENV[no]/.\//$BIN_DIR/}
-  if [ "$DEBUG" = "TRUE" ]; then
-    log "ENV.$((no+1)):$ENV_PATH"
-  fi
+  XALIAS+=(${ENV[no]##*/})
 }
+
 ##makes
 for ((no = 0; no < ${#MAKES[@]}; no++)) {
   MAKE_PATH=${MAKES[no]/.\//$BIN_DIR/}
@@ -123,8 +127,14 @@ for ((no = 0; no < ${#MAKES[@]}; no++)) {
     log "MAKE.$((no+1)):$MAKE_PATH"
   fi
 }
+XALIAS+=("make")
 
 [ "$DEBUG" = "TRUE" ] && hbr
+
+##alias
+if [ "$DEBUG" = "TRUE" ]; then
+  echo -e "$YEN$ESRT XALIAS:[${XALIAS[@]}]${EEND}"
+fi
 
 ##main
 if [ "$SOURCE" = "TRUE" ]; then
