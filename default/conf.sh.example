@@ -1,8 +1,15 @@
 #!bin/bash
+## "./" -> BIN_DIR=XD
 #echo "override configuraion script example"
-# "./" -> BIN_DIR
-declare -a IMPORT=("./src/import")
-declare -a SRC=("./src/default" "./env")
-SH="./src/default/sh.sh"
-RC="./src/default/rc.sh"
+
+#create configuration sybolic link
+CONF_PATH="$XD/default/conf.sh"
+if [ ! -e $CONF_PATH ]; then
+  ln -s $(pwd)/conf.sh $CONF_PATH
+fi
+
+#declare -a IMPORT=("./default/import/*");
+#declare -a SCRIPT=("./default/script/example.sh");
+#declare -a ENV=("bash" "node");
+#declare -a MAKES=("sample ./default/Makefile");
 

@@ -12,10 +12,10 @@ else
 fi
 
 ##var
-declare -r ESRT="\e[37;40;5m"
-declare -r EEND="\e[m"
-declare -r SHARP="\e[33;40;5m#\e[m"
-declare -r YEN="\e[33;40;1m$\e[m"
+ESRT="\e[37;40;5m"
+EEND="\e[m"
+SHARP="\e[33;40;5m#\e[m"
+YEN="\e[33;40;1m$\e[m"
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
@@ -23,7 +23,9 @@ BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 BIN_PATH="$BIN_DIR/$BIN_NAME"
 SRC="$BIN_DIR/src"
+export XD=$BIN_DIR
 export X=$BIN_PATH
+
 
 ##config
 CONF="$SRC/conf.sh";
