@@ -17,6 +17,7 @@ COLUMNS=$(tput cols)
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
 BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
+##init
 SH="./src/default/sh.sh"
 RC="./src/default/rc.sh"
 CONF="$BIN_DIR/src/conf.sh"
