@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ##flg
 timestamp(){ printf " : %.23s\n" "$(date +'%Y-%m-%d %H:%M:%S.%N')"; }
 [[ "$1" =~ ^-d$ ]] && DEBUG="TRUE" || unset DEBUG
@@ -14,8 +15,6 @@ fi
 ##var
 ESRT="\e[37;40;5m"
 EEND="\e[m"
-SHARP="\e[33;40;5m#\e[m"
-YEN="\e[33;40;1m$\e[m"
 LINES=$(tput lines)
 COLUMNS=$(tput cols)
 INSTALL_DIR=$(cd $(dirname $BASH_SOURCE); pwd)
@@ -26,17 +25,16 @@ SRC="$BIN_DIR/src"
 export XD=$BIN_DIR
 export X=$BIN_PATH
 
-
 ##config
 CONF="./default/conf.sh";
 SH="$SRC/sh.sh"
 RC="$SRC/rc.sh"
 EX="$SRC/ex.sh"
-declare -a IMPORT=("./default/import/*");
-declare -a SCRIPT=("./default/script/example.sh");
-declare -a ENV=("bash" "node");
-declare -a MAKES=("sample ./default/Makefile");
-declare -a XALIAS=();
+IMPORT=("./default/import/*");
+SCRIPT=("./default/script/example.sh");
+ENV=("bash");
+MAKES=("sample ./default/Makefile");
+XALIAS=();
 ARGS=$@;
 if [ "$DEBUG" = "TRUE" ]; then
   if [ $# -ge 1 ]; then
@@ -52,67 +50,80 @@ hr(){
   done
 }
 hbr(){ hr && printf "\n"; }
-ownlog(){ echo -e "$SHARP$ESRT $@$EEND"; }
-log(){ echo -e "$YEN$ESRT $@$EEND"; }
-notfound(){ log "==>NOT_FOUND:$@"; }
+log(){ echo -e "$ESRT$@$EEND"; }
+logown(){ echo -e "\e[33;40m#\e[m${ESRT} ${@}${EEND}"; }
+logusr(){ echo -e "\e[33;40;1m$\e[m${ESRT} ${@}${EEND}"; }
+logf(){ [ $# -ne 2 ] && log "==> $1:${@:2:($#-1)}" || log $@; }
+logng(){ echo -e "=====> \e[31;40;1m[$1]\e[m:${@:2:($#-1)}"; }
+logok(){ echo -e "=====> \e[32;40;1m[$1]\e[m:${@:2:($#-1)}"; }
 exist(){ [ -s "$1" ] && return 0 || return 1; }
 check(){
   if exist "$1"; then
-    [ "$DEBUG" = "TRUE" ] && log "==>CHECK:$1"
+    [ "$DEBUG" = "TRUE" ] && logok "CHECK" $1
   else
-    notfound $1;
+    logng "NOT_FOUND" $1;
   fi
 }
 load(){ 
-  if exist "$1"; then
-    [ "$DEBUG" = "TRUE" ] && log "==>LOAD:$1"
-    \. "$1"
+  if [ $# -ne 1 ]; then
+    echo "Require [Path]"
   else
-    notfound $1;
+    if exist "$1"; then
+      [ "$DEBUG" = "TRUE" ] && logok "LOAD" $1
+      \. "$1"
+    else
+      notfound $1;
+    fi
   fi
 }
-dirload(){
-FARY=();
-for filepath in $1; do
-  if [ -f $filepath ] ; then
-    FARY+=("$filepath")
+loadshdir(){
+  if [ $# -ne 1 ]; then
+    echo "Require [Path]"
+  else
+    FLIST=();
+	for file in `\find $1 -maxdepth 1 -not -name '.*' -type f`; do
+      FLIST+=("$file")
+    done
   fi
-done
-for item in ${FARY[@]}; do
-  load $item
-done
+  for target in ${FLIST[@]}; do
+    load $target
+  done
 }
 
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
   hbr
-  ownlog "LINES:$LINES,COLUMNS:$COLUMNS"
-  ownlog "\$#:$#,@:$@"
-  ownlog "ARGS(\$@-d):$ARGS"
-  ownlog "INSTALL:$INSTALL_DIR/$BIN_NAME"
-  ownlog "BIN_PATH:$BIN_PATH"
-  ownlog "SRC:$SRC"
+  logown "LINES:$LINES,COLUMNS:$COLUMNS"
+  logown "\$#:$#,@:$@"
+  logown "ARGS(\$@-d):$ARGS"
+  logown "INSTALL:$INSTALL_DIR/$BIN_NAME"
+  logown "BIN_PATH:$BIN_PATH"
+  logown "SRC:$SRC"
 fi
 
 ##override
-#[ -s "$CONF" ] && \. "$CONF"
-load ${CONF/.\//$BIN_DIR/}
+CONF=${CONF/.\//$BIN_DIR/}
+if [ -s "$CONF" ]; then
+  logf "FindConfigurationScript:$CONF"
+  \. "$CONF"
+fi
 
 [ "$DEBUG" = "TRUE" ] && hbr
 
 if [ "$DEBUG" = "TRUE" ]; then
-  log "RC:$RC"
-  log "SH:$SH"
+  logf "RC:$RC"
+  logf "SH:$SH"
   check $EX
 fi
 
 ##import
 for ((no = 0; no < ${#IMPORT[@]}; no++)) {
-  IMPORT_PATH=${IMPORT[no]/.\//$BIN_DIR/}
+  IMPORT_PATH=${IMPORT[no]}
+  IMPORT_PATH=${IMPORT_PATH/.\//$BIN_DIR/}
   if [ "$DEBUG" = "TRUE" ]; then
-    log "IMPORT.$((no+1)):$IMPORT_PATH"
+    logusr "IMPORT.$((no+1)):$IMPORT_PATH"
   fi
-  dirload $IMPORT_PATH
+  loadshdir $IMPORT_PATH
 }
 
 ##script
@@ -132,14 +143,14 @@ for ((no = 0; no < ${#ENV[@]}; no++)) {
 for ((no = 0; no < ${#MAKES[@]}; no++)) {
   MAKE_PATH=${MAKES[no]/.\//$BIN_DIR/}
   if [ "$DEBUG" = "TRUE" ]; then
-    log "MAKE.$((no+1)):[$MAKE_PATH]"
+    logusr "MAKE.$((no+1)):[$MAKE_PATH]"
   fi
 }
 XALIAS+=("make")
 
 ##alias
 if [ "$DEBUG" = "TRUE" ]; then
-  echo -e "$YEN$ESRT ==>XALIAS:[${XALIAS[@]}]${EEND}"
+  logf "XALIAS:[${XALIAS[@]}]${EEND}"
 fi
 
 [ "$DEBUG" = "TRUE" ] && hbr

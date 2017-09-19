@@ -5,9 +5,10 @@ x is cmd manager
 ##### usage
 `x`  
 `x -d`  
-`./x install.sh`  
-`sh ./x`  
 `source x`  
+`source x -d`  
+`sh ./x`  
+`./x install.sh`  
 `vim $X`  
 `cd $XD`  
   
