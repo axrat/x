@@ -22,8 +22,6 @@ BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 BIN_PATH="$BIN_DIR/$BIN_NAME"
 SRC="$BIN_DIR/src"
-export XD=$BIN_DIR
-export X=$BIN_PATH
 
 ##config
 CONF="./default/conf.sh";
@@ -90,6 +88,13 @@ loadshdir(){
   done
 }
 
+##export
+export X=$BIN_PATH
+export XD=$BIN_DIR
+export RC
+export SH
+export EX
+
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
   hbr
@@ -104,7 +109,7 @@ fi
 ##override
 CONF=${CONF/.\//$BIN_DIR/}
 if [ -s "$CONF" ]; then
-  logf "FindConfigurationScript:$CONF"
+  [ "$DEBUG" = "TRUE" ] && logf "FindConfigurationScript:$CONF"
   \. "$CONF"
 fi
 
@@ -129,14 +134,15 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
 ##script
 for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
   SCRIPT_PATH=${SCRIPT[no]/.\//$BIN_DIR/}
+  [ "$DEBUG" = "TRUE" ] && logusr "SCRIPT.$((no+1)):"
   check $SCRIPT_PATH
-  XALIAS+=(${SCRIPT_PATH##*/})
+  XALIAS+=("SCRIPT#${SCRIPT_PATH##*/}")
 }
 
 ##env
-[ "$DEBUG" = "TRUE" ] && echo -e "$YEN$ESRT ENV:[${ENV[@]}]${EEND}"
+[ "$DEBUG" = "TRUE" ] && logusr "ENV:[${ENV[@]}]"
 for ((no = 0; no < ${#ENV[@]}; no++)) {
-  XALIAS+=(${ENV[no]##*/})
+  XALIAS+=("ENV#${ENV[no]##*/}")
 }
 
 ##makes
@@ -145,12 +151,16 @@ for ((no = 0; no < ${#MAKES[@]}; no++)) {
   if [ "$DEBUG" = "TRUE" ]; then
     logusr "MAKE.$((no+1)):[$MAKE_PATH]"
   fi
+  XALIAS+=("MAKE#")
 }
-XALIAS+=("make")
 
 ##alias
 if [ "$DEBUG" = "TRUE" ]; then
-  logf "XALIAS:[${XALIAS[@]}]${EEND}"
+  logusr "XALIAS"
+  #logf "XALIAS:[${XALIAS[@]}]${EEND}"
+  for ((no = 0; no < ${#XALIAS[@]}; no++)) {
+    logok "No.$((no+1))" "${XALIAS[no]}"
+  }
 fi
 
 [ "$DEBUG" = "TRUE" ] && hbr
@@ -160,8 +170,6 @@ if [ "$SOURCE" = "TRUE" ]; then
   source ${RC/.\//$BIN_DIR/} $ARGS
 else
   source ${SH/.\//$BIN_DIR/} $ARGS
-  ##ex
-  load $EX
 fi
 
 ##exit
@@ -169,5 +177,7 @@ fi
 if [ "$SOURCE" = "TRUE" ]; then
   return 0;
 else
+  ##ex
+  load $EX
   exit 0;
 fi
