@@ -26,8 +26,9 @@ SRC="$BIN_DIR/src"
 ##config
 CONF="./default/conf.sh";
 SH="$SRC/sh.sh"
+SHEX="$SRC/shex.sh"
 RC="$SRC/rc.sh"
-EX="$SRC/ex.sh"
+RCEX="$SRC/rcex.sh"
 IMPORT=("./default/import/*");
 SCRIPT=("./default/script/example.sh");
 ENV=("bash");
@@ -92,8 +93,9 @@ loadshdir(){
 export X=$BIN_PATH
 export XD=$BIN_DIR
 export RC
+export RCEX
 export SH
-export EX
+export SHEX
 
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
@@ -116,9 +118,10 @@ fi
 [ "$DEBUG" = "TRUE" ] && hbr
 
 if [ "$DEBUG" = "TRUE" ]; then
-  logf "RC:$RC"
-  logf "SH:$SH"
-  check $EX
+  logusr "RC:$RC"
+  logusr "RCEX:$RCEX"
+  logusr "SH:$SH"
+  logusr "SHEX:$SHEX"
 fi
 
 ##import
@@ -175,9 +178,10 @@ fi
 ##exit
 [ "$DEBUG" = "TRUE" ] && hbr && printf "_COMPLETE_" && timestamp
 if [ "$SOURCE" = "TRUE" ]; then
+  eval $RCEX
   return 0;
 else
   ##ex
-  load $EX
+  eval $SHEX
   exit 0;
 fi
