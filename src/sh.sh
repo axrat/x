@@ -12,12 +12,19 @@ fi
 ##readme
 function xreadme(){
 cat << EOF
-X README
+test,sqlite
 EOF
 }
 
-##call
-call_sqlite(){
+##main
+if [ "$ARGS" = "NULL" ]; then
+  xreadme
+else
+  case $1 in
+
+"test" )  echo "test call";;
+
+"sqlite" )
 DB="$BIN_DIR/mysqlite.db"
 CMD="sqlite3 ${DB}"
 if [ -e "${DB}" ]; then
@@ -29,17 +36,8 @@ else
     echo "create database ${DB}"
 fi
 echo "select * from tbl1;" | $CMD
-}
+;;
 
-##main
-if [ "$ARGS" = "NULL" ]; then
-  xreadme
-else
-  case $1 in
-    "test" )  echo "test call";;
-    "sqlite" )
-	  call_sqlite
-	;;
     * ) echo "unknown call : $1" ;;
   esac
 fi
