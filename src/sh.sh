@@ -13,10 +13,22 @@ fi
 if [ "$1" = "NULL" ]; then
 cat << EOF
 test,sqlite
+env bash/node [filename] [args]
+evm [name].sh
 EOF
 else
   case "$1" in
 "test" )  echo "test call";;
+"evm" )
+  EVM_SOURCE="$PROFILE/evm/$2.sh"
+  if [[ -e "$EVM_SOURCE" ]]; then
+    log "EVM Load:$EVM_SOURCE"
+    source $EVM_SOURCE
+  else
+    log "NotFoundEVM"
+    ls $EVM
+  fi
+;;
 "env" )
 ENV=$2
 ENV_ARGS=${@:4:($#-1)}

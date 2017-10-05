@@ -22,16 +22,17 @@ BIN_NAME=${BASH_SOURCE##*/}
 BIN_DIR=$(dirname `readlink -f "$INSTALL_DIR/$BIN_NAME"`)
 BIN_PATH="$BIN_DIR/$BIN_NAME"
 SRC="$BIN_DIR/src"
+CONF="$SRC/conf.sh";
 
 ##config
 PROFILE="./default";
 PROFILE=${PROFILE/.\//$BIN_DIR/}
-CONF="$PROFILE/conf.sh";
 SH="$SRC/sh.sh"
 SHEX="$SRC/shex.sh"
 RC="$SRC/rc.sh"
 RCEX="$SRC/rcex.sh"
 IMPORT=("$PROFILE/import/*");
+EVM=("$PROFILE/evm/*");
 SCRIPT=("$PROFILE/script/example.sh");
 ENV=("bash");
 MAKES=("sample $PROFILE/Makefile");
@@ -43,6 +44,14 @@ if [ "$DEBUG" = "TRUE" ]; then
   fi 
 fi
 [ "$ARGS" = "" ] && ARGS="NULL"
+
+##export
+export X=$BIN_PATH
+export XD=$BIN_DIR
+export RC
+export RCEX
+export SH
+export SHEX
 
 ##func
 hr(){
@@ -91,14 +100,6 @@ loadshdir(){
   done
 }
 
-##export
-export X=$BIN_PATH
-export XD=$BIN_DIR
-export RC
-export RCEX
-export SH
-export SHEX
-
 ##debug
 if [ "$DEBUG" = "TRUE" ]; then
   hbr
@@ -134,6 +135,16 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
     logusr "IMPORT.$((no+1)):$IMPORT_PATH"
   fi
   loadshdir $IMPORT_PATH
+}
+
+##evm
+for ((no = 0; no < ${#EVM[@]}; no++)) {
+  EVM_PATH=${EVM[no]}
+  EVM_PATH=${EVM_PATH/.\//$BIN_DIR/}
+  if [ "$DEBUG" = "TRUE" ]; then
+    logusr "EVM.$((no+1)):$EVM_PATH"
+  fi
+  check $EVM_PATH
 }
 
 ##script

@@ -1,0 +1,1 @@
+/home/onoie/conf.sh

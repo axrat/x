@@ -15,7 +15,11 @@ x is cmd manager
 ## config.sh
 ##### import
 autoload  
-ex) `declare -a IMPORT=("./src/import/*")`  
+ex) `declare -a IMPORT=("./default/import/*")`  
+##### evm
+load lang envroiment version manager  
+ex) `declare -a EVM=("./default/evm/*")`  
+~~`x evm nvm` => `source ./default/evm/nvm.sh`~~  
 ##### script
 fast script  
 ex) `declare -a SCRIPT=("./src/script/example.sh")`  
@@ -24,7 +28,7 @@ ex) `declare -a SCRIPT=("./src/script/example.sh")`
 shebang scripts  
 ex) `declare -a ENV=("bash" "node")`  
 `x bash hello.sh` => `/usr/bin/env bash ./env/bash/hello.sh`  
-`x node echo.js hello onoie` => `/usr/bin/env node ./env/node/echo.js "hello onoie"`  
+`x node echo.js hello onoie` => `/usr/bin/env node ./default/env/node/echo.js "hello onoie"`  
 ##### make
 makefiles alias  
 ex) `declare -a MAKES=("sample ./default/Makefile")`  

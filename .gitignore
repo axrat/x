@@ -1,2 +1,2 @@
-default/conf.sh
+src/conf.sh
 mysqlite.db
