@@ -171,10 +171,10 @@ fi
 
 if [ "$SOURCE" = "TRUE" ]; then
   ##mainRC
-  source ${RC/.\//$BIN_DIR/} $ARGS
+  source ${RC/.\//$BIN_DIR/} ${ARGS[@]}
 else
   ##mainSH
-  source ${SH/.\//$BIN_DIR/} $ARGS
+  source ${SH/.\//$BIN_DIR/} ${ARGS[@]}
 fi
 
 ##exit
