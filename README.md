@@ -23,18 +23,17 @@ ex) `declare -a SCRIPT=("./src/script/example.sh")`
 ##### env
 shebang scripts  
 ex) `declare -a ENV=("bash" "node")`  
-~~`x bash hello` => `/usr/bin/env bash ./env/bash/hello.sh`~~  
-~~`x node echo hello` => `/usr/bin/env node ./env/node/echo.js "hello"`~~  
+`x bash hello.sh` => `/usr/bin/env bash ./env/bash/hello.sh`  
+`x node echo.js hello onoie` => `/usr/bin/env node ./env/node/echo.js "hello onoie"`  
 ##### make
 makefiles alias  
 ex) `declare -a MAKES=("sample ./default/Makefile")`  
 ~~`x make sample readme` => `$MAKES[sample]:./src/default/Makefile.make readme`~~  
 ## variable
-export X,XD   
-DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS  
+export X,XD  
+TODO~~DEBUG,SOURCE,LINES,COLUMNS,INSTALL_DIR,BIN_NAME,BIN_DIR,BIN_PATH,SRC,SH,RC,CONF,IMPORT,ENV,SCRIPT,MAKES,ARGS~~  
 ### function
-timestamp,hr,hbr,ownlog,log,notfound,exist,load
-  
+TODO~~timestamp,hr,hbr,ownlog,log,notfound,exist,load~~  
 ## author
 onoie
   

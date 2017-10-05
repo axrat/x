@@ -9,21 +9,28 @@ if [ "$DEBUG" = "TRUE" ]; then
 #  }
 fi
 
-##readme
-function xreadme(){
+##main
+if [ "$1" = "NULL" ]; then
 cat << EOF
 test,sqlite
 EOF
-}
-
-##main
-if [ "$ARGS" = "NULL" ]; then
-  xreadme
 else
-  case $1 in
-
+  case "$1" in
 "test" )  echo "test call";;
-
+"env" )
+ENV=$2
+ENV_ARGS=${@:4:($#-1)}
+if [[ $ENV = "bash" || $ENV = "node" ]]; then
+  ENV_BIN="$PROFILE/env/$ENV"
+  if [[ $# -ge 3 && -e "$ENV_BIN/$3" ]]; then
+    /usr/bin/env $ENV $ENV_BIN/$3 ${ENV_ARGS[@]}
+  else
+    ls "$PROFILE/env/$ENV/"
+  fi
+else
+  ls "$PROFILE/env"
+fi
+;;
 "sqlite" )
 DB="$BIN_DIR/mysqlite.db"
 CMD="sqlite3 ${DB}"
@@ -37,7 +44,6 @@ else
 fi
 echo "select * from tbl1;" | $CMD
 ;;
-
     * ) echo "unknown call : $1" ;;
   esac
 fi

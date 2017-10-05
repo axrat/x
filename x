@@ -24,15 +24,17 @@ BIN_PATH="$BIN_DIR/$BIN_NAME"
 SRC="$BIN_DIR/src"
 
 ##config
-CONF="./default/conf.sh";
+PROFILE="./default";
+PROFILE=${PROFILE/.\//$BIN_DIR/}
+CONF="$PROFILE/conf.sh";
 SH="$SRC/sh.sh"
 SHEX="$SRC/shex.sh"
 RC="$SRC/rc.sh"
 RCEX="$SRC/rcex.sh"
-IMPORT=("./default/import/*");
-SCRIPT=("./default/script/example.sh");
+IMPORT=("$PROFILE/import/*");
+SCRIPT=("$PROFILE/script/example.sh");
 ENV=("bash");
-MAKES=("sample ./default/Makefile");
+MAKES=("sample $PROFILE/Makefile");
 XALIAS=();
 ARGS=$@;
 if [ "$DEBUG" = "TRUE" ]; then
@@ -80,7 +82,7 @@ loadshdir(){
     echo "Require [Path]"
   else
     FLIST=();
-	for file in `\find $1 -maxdepth 1 -not -name '.*' -type f`; do
+  for file in `\find $1 -maxdepth 1 -not -name '.*' -type f`; do
       FLIST+=("$file")
     done
   fi
