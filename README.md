@@ -16,11 +16,7 @@ x is script manager
 ##### import
 autoload  
 ex) `declare -a IMPORT=("./default/import/*")`  
-##### evm
-load lang envroiment version manager  
-ex) `declare -a EVM=("./default/evm/*")`  
-~~`x evm nvm` => `source ./default/evm/nvm.sh`~~  
-##### script
+###### script
 fast script  
 ex) `declare -a SCRIPT=("./src/script/example.sh")`  
 ~~`./x install` => `/bin/bash ./script/install.sh`~~  
