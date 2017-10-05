@@ -1,5 +1,5 @@
 # x
-x is bash manager  
+x is script manager  
 ##### download
 `sudo wget --no-check-certificate https://github.com/onoie/x/archive/master.zip -O x-master.zip`  
 ##### usage

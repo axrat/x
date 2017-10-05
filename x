@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ##flg
 timestamp(){ printf " : %.23s\n" "$(date +'%Y-%m-%d %H:%M:%S.%N')"; }
 [[ "$1" =~ ^-d$ ]] && DEBUG="TRUE" || unset DEBUG
@@ -32,17 +31,16 @@ SHEX="$SRC/shex.sh"
 RC="$SRC/rc.sh"
 RCEX="$SRC/rcex.sh"
 IMPORT=("$PROFILE/import/*");
-EVM=("$PROFILE/evm/*");
 SCRIPT=("$PROFILE/script/example.sh");
 ENV=("bash");
 MAKES=("sample $PROFILE/Makefile");
 XALIAS=();
-ARGS=$@;
-if [ "$DEBUG" = "TRUE" ]; then
-  if [ $# -ge 1 ]; then
-    ARGS=${ARGS#"-d"}
-  fi 
-fi
+declare -a ARGS;
+for V in "${@}"; do
+  if [[ ! $V = "-d" ]]; then
+  ARGS=("${ARGS[@]}" $V)
+  fi
+done
 [ "$ARGS" = "" ] && ARGS="NULL"
 
 ##export
@@ -137,16 +135,6 @@ for ((no = 0; no < ${#IMPORT[@]}; no++)) {
   loadshdir $IMPORT_PATH
 }
 
-##evm
-for ((no = 0; no < ${#EVM[@]}; no++)) {
-  EVM_PATH=${EVM[no]}
-  EVM_PATH=${EVM_PATH/.\//$BIN_DIR/}
-  if [ "$DEBUG" = "TRUE" ]; then
-    logusr "EVM.$((no+1)):$EVM_PATH"
-  fi
-  check $EVM_PATH
-}
-
 ##script
 for ((no = 0; no < ${#SCRIPT[@]}; no++)) {
   SCRIPT_PATH=${SCRIPT[no]/.\//$BIN_DIR/}
@@ -181,10 +169,11 @@ fi
 
 [ "$DEBUG" = "TRUE" ] && hbr
 
-##main
 if [ "$SOURCE" = "TRUE" ]; then
+  ##mainRC
   source ${RC/.\//$BIN_DIR/} $ARGS
 else
+  ##mainSH
   source ${SH/.\//$BIN_DIR/} $ARGS
 fi
 
