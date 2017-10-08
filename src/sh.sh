@@ -18,7 +18,7 @@ EOF
 else
   case "$1" in
 "test" )  echo "test call";;
-"env" )
+"env" )#Envroiment
 ENV=$2
 ENV_ARGS=${@:4:($#-1)}
 if [[ $ENV = "bash" || $ENV = "node" ]]; then
@@ -32,7 +32,25 @@ else
   ls "$PROFILE/env"
 fi
 ;;
-"sqlite" )
+"githubapiuser" )
+##get user public repositories list
+curl https://api.github.com/users/$GITHUB_USER/repos
+;;
+"githubapiusertoken" )
+##get user repositories list with access token
+curl -u :${GITHUB_TOKEN} https://api.github.com/users/$GITHUB_USER/repos
+;;
+"githubapiorgs" )
+curl https://api.github.com/orgs/$GITHUB_ORGS/repos
+;;
+"bitbucketapi" )
+## get user public repositories
+curl https://api.bitbucket.org/2.0/repositories/$BITBUCKET_USER/$BITBUCKET_USER.bitbucket.org
+;;
+"bitbucketapip" )
+curl --user $BITBUCKET_USER:$BITBUCKET_PASS https://api.bitbucket.org/2.0/repositories/$BITBUCKET_USER
+;;
+"sqlite" )#SQLite2
 DB="$BIN_DIR/mysqlite.db"
 CMD="sqlite3 ${DB}"
 if [ -e "${DB}" ]; then
